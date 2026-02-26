@@ -197,7 +197,7 @@ export default function Home() {
               <div className="absolute w-3 h-3 bg-gray-400 rounded-full -left-[7px] top-2"></div>
               <h4 className="text-xl font-bold text-gray-900">Delivery Team Lead / Scrum Master</h4>
               <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                <span className="font-semibold text-gray-700">Tata Consultancy Services (Client: NatWest Group)</span>
+                <span className="font-semibold text-blue-700">Tata Consultancy Services (Client: NatWest Group)</span>
                 <span>•</span>
                 <span>01/2018 - 05/2020</span>
               </div>
@@ -210,7 +210,7 @@ export default function Home() {
               <div className="absolute w-3 h-3 bg-gray-400 rounded-full -left-[7px] top-2"></div>
               <h4 className="text-xl font-bold text-gray-900">Project Leader</h4>
               <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                <span className="font-semibold text-gray-700">Tata Consultancy Services (Client: McKinsey & Company)</span>
+                <span className="font-semibold text-blue-700">Tata Consultancy Services (Client: McKinsey & Company)</span>
                 <span>•</span>
                 <span>12/2015 - 05/2017</span>
               </div>
