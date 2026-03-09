@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import ChatBot from '@/components/ChatBot';
 
 export default function Home() {
   return (
@@ -231,6 +232,9 @@ export default function Home() {
         </section>
 
       </div>
+
+      {/* AI Chatbot Widget */}
+      <ChatBot />
     </main>
   );
 }
