@@ -197,19 +197,30 @@ export const profileData = {
 // Helper function to find relevant answer
 export function findAnswer(query: string): string {
   const lowerQuery = query.toLowerCase();
+  const normalizedQuery = lowerQuery.replace(/[^a-z0-9\s]/g, ' ');
+  const hasKeyword = (keywords: string[]) => keywords.some((keyword) => normalizedQuery.includes(keyword));
   
   // Check for CONTACT keywords FIRST (highest priority)
-  if (lowerQuery.includes('contact') || lowerQuery.includes('email') || lowerQuery.includes('phone') || lowerQuery.includes('reach') || lowerQuery.includes('number')) {
+  if (hasKeyword(['contact', 'email', 'phone', 'reach', 'number'])) {
     return `You can reach me at:\n📧 Email: ${profileData.personal.email}\n📱 Phone: ${profileData.personal.phone}\n💼 LinkedIn: ${profileData.personal.linkedin}\n🐙 GitHub: ${profileData.personal.github}`;
+  }
+
+  // Check for CERTIFICATION keywords early to avoid generic FAQ fallbacks
+  if (hasKeyword(['certificate', 'certificates', 'certification', 'certifications', 'qualified', 'qualification', 'qualifications', 'certified', 'credential', 'credentials', 'istqb', 'cerficate', 'cerficates', 'cerification', 'cerifications'])) {
+    const certs = profileData.certifications
+      .map(c => `• ${c.name} (${c.level})`)
+      .join('\n');
+    return `My professional certifications:\n${certs}`;
   }
 
   // Direct FAQ matching (Improved - more specific)
   const faqMatch = profileData.faq.find(item => {
-    const questionWords = item.question.toLowerCase().split(/\s+/);
+    const questionWords = item.question.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/);
     // Check if at least 2 significant words match (not just "is", "are", "the", etc.)
     const significantWords = questionWords.filter(w => w.length > 3);
-    const matchCount = significantWords.filter(word => lowerQuery.includes(word)).length;
-    return matchCount >= 2 || lowerQuery.includes(item.question.toLowerCase());
+    const matchCount = significantWords.filter(word => normalizedQuery.includes(word)).length;
+    const normalizedQuestion = item.question.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').trim();
+    return matchCount >= 2 || normalizedQuery.includes(normalizedQuestion);
   });
   
   if (faqMatch) {
@@ -217,37 +228,30 @@ export function findAnswer(query: string): string {
   }
 
   // Keyword-based matching
-  if (lowerQuery.includes('skill') || lowerQuery.includes('expertise') || lowerQuery.includes('proficient') || lowerQuery.includes('can you do') || lowerQuery.includes('technical')) {
+  if (hasKeyword(['skill', 'skills', 'expertise', 'proficient', 'technical'])) {
     const skills = Object.entries(profileData.skills)
       .map(([category, items]) => `${category}: ${items.join(', ')}`)
       .join('\n');
     return `My key skills and expertise:\n\n${skills}`;
   }
 
-  if (lowerQuery.includes('experience') || lowerQuery.includes('background') || lowerQuery.includes('worked')) {
+  if (hasKeyword(['experience', 'background', 'worked'])) {
     return profileData.summary;
   }
 
-  if (lowerQuery.includes('client') || lowerQuery.includes('work with') || lowerQuery.includes('companies')) {
+  if (hasKeyword(['client', 'clients', 'companies'])) {
     return `I've successfully delivered solutions for: ${profileData.keyClients.join(', ')}. These engagements span Banking, Telecom, and Healthcare sectors.`;
   }
 
-  if (lowerQuery.includes('location') || lowerQuery.includes('where are you') || lowerQuery.includes('based')) {
+  if (hasKeyword(['location', 'based'])) {
     return `I'm based in ${profileData.personal.location}.`;
   }
 
-  if (lowerQuery.includes('certificate') || lowerQuery.includes('qualification') || lowerQuery.includes('certified')) {
-    const certs = profileData.certifications
-      .map(c => `• ${c.name} (${c.level})`)
-      .join('\n');
-    return `My professional certifications:\n${certs}`;
-  }
-
-  if (lowerQuery.includes('industry') || lowerQuery.includes('domain') || lowerQuery.includes('sector')) {
+  if (hasKeyword(['industry', 'domain', 'sector'])) {
     return `I specialize in: ${profileData.industries.join(', ')}. My expertise spans these verticals with Fortune 500 organizations.`;
   }
 
-  if (lowerQuery.includes('achievement') || lowerQuery.includes('accomplishment')) {
+  if (hasKeyword(['achievement', 'achievements', 'accomplishment', 'accomplishments'])) {
     const achievements = profileData.achievements
       .map(a => `• ${a}`)
       .join('\n');
